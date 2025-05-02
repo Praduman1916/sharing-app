@@ -12,7 +12,7 @@ module.exports = {
         error: "#FF3939",
       },
       fontFamily: {
-        instrument: ['InstrumentSans', 'sans-serif'],
+        instrument: ['"Instrument Sans"', 'sans-serif'],
       },
     },
   },
