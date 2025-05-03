@@ -18,11 +18,22 @@ export default function SortableCard(props) {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 50 : 'auto',
+    touchAction: 'none'
   };
 
   return (
-    <div ref={setNodeRef} style={style}>
+
+
+    // Enable drag-and-drop from the entire card area (including non-drag-icon parts)
+    // This provides a more flexible experience—users can initiate drag from anywhere on the card.
+    <div ref={setNodeRef} style={style} >
       <EditableLinkCard {...props} dragHandleProps={{ ...attributes, ...listeners }} />
     </div>
+
+    //  Restrict drag-and-drop to the drag icon only
+    // <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-action-none">
+    //   <EditableLinkCard {...props} />
+    // </div>
+
   );
 }

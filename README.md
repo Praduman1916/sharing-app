@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+---
 
-First, run the development server:
+````markdown
+
+# Link Sharing App – Frontend Only
+
+This is a frontend-only Link Sharing App built with **Next.js**.  
+The app allows users to add, edit, delete, and reorder links like GitHub, LinkedIn, YouTube, Facebook, and Frontend Mentor.  
+It also shows a live preview of links inside a mobile mockup. By clicking on any link, it opens in a new tab.
+
+
+---
+
+##  Tech Stack
+
+- Next.js (App Router)
+- Tailwind CSS
+- React Hooks
+- @dnd-kit for drag & drop
+
+---
+
+##  Features
+
+- Add, edit, or remove links
+- Drag and drop to reorder
+- Mobile preview on the left
+- Responsive layout for all devices
+- Simple validation on URLs
+- Follows Figma design closely
+
+---
+
+##  Getting Started
+
+### 1. Clone the project
+
+```bash
+git clone https://github.com/Praduman1916/sharing-app.git
+cd sharing-app
+````
+
+### 2. Install dependencies
+
+```bash
+npm install
+
+```
+
+### 3. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+##  Project Structure
 
-## Learn More
+```
+/public
+  /images         → All icons and illustrations
+/components
+  /ui             → Header, LinkEditor,EditableLinkCard, SortableCard,MobilePreview.
+  /lib            → Static platform options
+/app
+  /page.tsx       → Main Dashboard page
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+##  Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Only the frontend part is done.
+* No database or API setup.
+* No login or authentication yet.
+* All data is stored temporarily in state.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+```

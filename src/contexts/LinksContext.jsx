@@ -7,7 +7,7 @@ export function LinksProvider({ children }) {
   const [links, setLinks] = useState([]);
 
   const addLink = (newLink) => setLinks([...links, newLink]);
-  const updateLink = (id, updatedLink) => 
+  const updateLink = (id, updatedLink) =>
     setLinks(links.map(link => link.id === id ? updatedLink : link));
   const deleteLink = (id) => setLinks(links.filter(link => link.id !== id));
 

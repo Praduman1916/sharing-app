@@ -1,11 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import dragIcon from '../../../public/images/icon-drag-and-drop.svg';
 import chevronDown from '../../../public/images/icon-chevron-down.svg';
 import iconLink from '../../../public/images/icon-link.svg';
-import githubIcon from '../../../public/images/icon-github.svg'; // example icon
 import { platformOptions } from '@/lib/platformOptions';
+import { getExpectedPrefix } from '@/lib/getExpectedPrefix';
 
 export default function EditableLinkCard({
     index,
@@ -18,6 +18,7 @@ export default function EditableLinkCard({
     const [url, setUrl] = useState(data.url || '');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [error, setError] = useState('');
+    const dropdownRef = useRef(null);
 
     const current = platformOptions.find((p) => p.label === platform) || platformOptions[0];
 
@@ -33,7 +34,6 @@ export default function EditableLinkCard({
         } else {
             setError('');
         }
-
         onUpdate(index, { platform, url, error });
     };
 
@@ -46,49 +46,72 @@ export default function EditableLinkCard({
         setUrl(e.target.value);
     };
 
-    const getExpectedPrefix = (platform) => {
-        switch (platform.toLowerCase()) {
-            case 'github':
-                return 'https://www.github.com/';
-            case 'youtube':
-                return 'https://www.youtube.com/';
-            case 'linkedin':
-                return 'https://www.linkedin.com/';
-            case 'frontend mentor':
-                return 'https://www.frontendmentor.io/';
-            default:
-                return 'https://';
-        }
-    };
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
 
     return (
-        <div className="bg-gray-100 p-4 rounded-lg mb-4">
-            {/* Top Row */}
-            <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-2 text-gray-600 text-sm cursor-move" {...dragHandleProps}>
+        <div className="bg-[#FAFAFA] p-5 rounded-[12px] w-full max-w-full min-h-[228px] mb-4 flex flex-col gap-3">
+            <div className="flex justify-between items-center">
+                <div
+                    className="flex items-center gap-2 text-sm text-[#737373] cursor-move font-instrument"
+                    {...dragHandleProps}
+                >
                     <Image src={dragIcon} alt="drag" width={16} height={16} />
-                    <span className="font-bold h-6  text-[#737373] leading-6 ">Link #{index + 1}</span>
+                    <span className="font-bold">Link #{index + 1}</span>
                 </div>
                 <button
                     onClick={() => onRemove(index)}
-                    className="text-sm text-gray-400 font-medium hover:text-gray-600"
+                    className="flex items-center gap-1 text-sm font-medium text-[#737373] font-instrument 
+             hover:text-red-500 hover:underline
+             transition-colors duration-200"
                 >
                     Remove
                 </button>
             </div>
+            <div className="relative font-instrument" ref={dropdownRef}>
+                <label className="text-[#737373] text-sm mb-1 block">Platform</label>
 
-            {/* Platform Dropdown */}
-            <div className="mb-3 relative">
-                <label className="text-[#737373] block mb-1 h-[18px] leading-[18px]">Platform</label>
                 <div
-                    className="flex items-center gap-2 p-2 border border-[#D9D9D9] rounded-md bg-white cursor-pointer relative "
                     onClick={() => setDropdownOpen(!dropdownOpen)}
+                    tabIndex={0}
+                    className={`flex items-center gap-2 px-4 py-[10px] border rounded-md bg-white cursor-pointer transition
+            ${dropdownOpen ? 'border-violet-600 shadow-md' : 'border-[#D9D9D9]'}
+            focus:outline-none focus:ring-2 focus:ring-violet-500`}
                 >
                     <Image src={current.icon} alt={platform} width={20} height={20} />
                     <span className="text-sm">{current.label}</span>
                     <Image src={chevronDown} alt="Chevron" width={16} height={16} className="ml-auto" />
                 </div>
 
+                {/* {dropdownOpen && (
+                    <div className="absolute top-14 left-0 w-full bg-white rounded-lg shadow-md z-10 overflow-hidden border border-[#D9D9D9]">
+                        <ul>
+                            {platformOptions.map((item, idx) => (
+                                <li
+                                    key={item.value}
+                                    onClick={() => handlePlatformChange(item)}
+                                    className={`flex items-center gap-3 px-4 py-2 text-sm cursor-pointer transition-2
+                    text-gray-800 hover:text-[#633CFF]
+                    ${idx !== platformOptions.length - 1 ? 'border-b border-[#E5E5E5]' : ''}`}
+                                >
+                                    <Image
+                                        src={item.icon}
+                                        alt={item.label}
+                                        width={20} height={20} />
+                                    <span>{item.label}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )} */}
                 {dropdownOpen && (
                     <div className="absolute top-14 left-0 w-full bg-white rounded-lg shadow-md z-10 overflow-hidden border border-[#D9D9D9]">
                         <ul>
@@ -96,21 +119,42 @@ export default function EditableLinkCard({
                                 <li
                                     key={item.value}
                                     onClick={() => handlePlatformChange(item)}
-                                    className={`flex items-center gap-3 px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 cursor-pointer ${idx !== platformOptions.length - 1 ? 'border-b border-[#D9D9D9]' : ''
-                                        }`}
-                                >
-                                    <Image src={item.icon} alt={item.label} width={20} height={20} />
-                                    <span>{item.label}</span>
+                                    className={`group flex items-center gap-3 px-4 py-2 text-sm cursor-pointer transition-all duration-200
+            ${idx !== platformOptions.length - 1 ? 'border-b border-[#E5E5E5]' : ''}`}
+                                >          <div className="relative w-5 h-5">
+                                        <Image
+                                            src={item.icon}
+                                            alt={item.label}
+                                            width={20}
+                                            height={20}
+                                            className="absolute inset-0 transition-opacity duration-200 group-hover:opacity-0"
+                                        />
+                                        <Image
+                                            src={item.icon}
+                                            alt={`${item.label}-hover`}
+                                            width={20}
+                                            height={20}
+                                            className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+                                            style={{
+                                                filter:
+                                                    'brightness(0) saturate(100%) invert(27%) sepia(90%) saturate(2456%) hue-rotate(235deg) brightness(97%) contrast(92%)',
+                                            }}
+                                        />
+                                    </div>
+                                    <span className="text-gray-800 group-hover:text-[#633CFF] transition-colors duration-200">
+                                        {item.label}
+                                    </span>
                                 </li>
                             ))}
                         </ul>
                     </div>
                 )}
+
             </div>
 
-            {/* Link Input + Error */}
+
             <div>
-                <label className="text-[#737373] block mb-1 h-[18px] leading-[18px]">Link</label>
+                <label className="text-[#737373] text-sm font-instrument mb-1 block">Link</label>
                 <div className="relative">
                     <Image
                         src={iconLink}
@@ -119,28 +163,23 @@ export default function EditableLinkCard({
                         height={16}
                         className="absolute left-3 top-1/2 transform -translate-y-1/2"
                     />
-
-                    {/* Error message on the right INSIDE input */}
                     {error && (
                         <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-red-500">
                             {error}
                         </span>
                     )}
-
-                    {/* Input Field */}
                     <input
                         type="url"
                         value={url}
                         onChange={handleUrlChange}
                         placeholder={`e.g. ${getExpectedPrefix(platform)}yourname`}
-                        className={`pl-10 pr-24 w-full p-2 rounded-md text-sm placeholder:text-sm ${error
-                                ? 'border border-red-500 text-gray-700 placeholder:text-gray-400'
-                                : 'border border-[#D9D9D9] text-gray-700 placeholder:text-gray-400'
+                        className={`pl-10 pr-24 w-full p-2 text-sm rounded-md font-instrument placeholder:text-sm ${error
+                            ? 'border border-red-500 text-gray-700 placeholder:text-gray-400'
+                            : 'border border-[#D9D9D9] text-gray-700 placeholder:text-gray-400'
                             }`}
                     />
                 </div>
             </div>
-
         </div>
     );
 }
