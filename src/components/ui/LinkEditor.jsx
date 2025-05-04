@@ -83,6 +83,7 @@ export default function LinkEditor({ links, setLinks }) {
 
     setLinks(updated);
   }, [links.map(link => link.url + link.platform).join('')]);
+  // [JSON.stringify(links)]
 
   return (
     <div className="flex flex-col h-full bg-white rounded-[12px] justify-between shadow-lg overflow-hidden">

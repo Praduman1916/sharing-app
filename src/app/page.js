@@ -13,12 +13,12 @@ export default function DashboardPage() {
     <div className="min-h-screen relative">
       <Header className="hidden md:block" />
       <main className="mt-6 flex flex-col lg:flex-row h-full pb-16 md:pb-0 gap-6">
-        <div className="hidden lg:flex lg:w-1/2 justify-center items-center">
+        <section className="hidden lg:flex lg:w-1/2 justify-center items-center">
           <MobilePreview links={links} />
-        </div>
-        <div className="w-full lg:w-1/2 max-w-3xl mx-auto overflow-y-auto">
+        </section>
+        <section className="w-full lg:w-1/2 max-w-3xl mx-auto overflow-y-auto">
           <LinkEditor links={links} setLinks={setLinks} />
-        </div>
+        </section>
       </main>
 
     </div>

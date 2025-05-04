@@ -1,7 +1,7 @@
 const getExpectedPrefix = (platform) => {
     switch (platform.toLowerCase()) {
         case 'github':
-            return 'https://www.github.com/';
+            return 'https://github.com/';
         case 'youtube':
             return 'https://www.youtube.com/';
         case 'linkedin':
